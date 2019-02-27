@@ -205,7 +205,7 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
     
 <img src="./resource/foodtrucks.png" alt="foodtrucks" width="80%"/>
 
-1. 下面將以FoodTrucks專案為例，說明請參考[Github](https://github.com/nowaxsky/FoodTrucks "FoodTrucks")。請用下列指令下載程式碼：
+1. 下面將以FoodTrucks專案為例，後台由Python (Flask)做成，搜尋是使用[Elasticsearch](https://www.elastic.co/products/elasticsearch)(ES)，服務分為兩個部分，說明請參考[Github](https://github.com/nowaxsky/FoodTrucks "FoodTrucks")。請用下列指令下載程式碼：
     ```
     $ git clone https://github.com/prakhar1989/FoodTrucks
     $ cd FoodTrucks
@@ -230,4 +230,16 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
         ├── generate_geojson.py
         └── trucks.geojson
     ```
-1. 
+1. 服務拆為兩個部分，所以啟動兩個容器，但從Github上面只能下載到backend的部分，可以透過下列指令搜尋遠端是否有Elasticsearch的專案：
+    ```
+    $ sudo docker search elasticsearch
+    ```
+    * 可以發現有官方專案，不過這邊建議還是使用Elastic公司自行維護的[網站](https://www.docker.elastic.co/)來下載：
+    ```
+    $ sudo docker pull docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+    ``` 
+    * 下載完成後用下列語法來啟動：
+    ```
+    docker run -d --name es -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+    ```
+
