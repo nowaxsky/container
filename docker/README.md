@@ -13,7 +13,6 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
 
 特性|容器|虛擬機
 --|--|--
-特性|容器|虛擬機
 啟動|秒級|分鐘級
 硬碟容量|一般為 MB|一般為 GB
 效能|接近原生|比較慢
@@ -60,7 +59,7 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
     ```
 1. 查看所有本機的image
     ```
-    $ sudo docker image ls
+    $ sudo docker images
     REPOSITORY       TAG      IMAGE ID      CREATED      VIRTUAL SIZE
     ubuntu           12.04    74fe38d11401  4 weeks ago  209.6 MB
     ubuntu           precise  74fe38d11401  4 weeks ago  209.6 MB
@@ -70,10 +69,20 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
     ```
     * 其中映像檔的 ID 唯一標識了映像檔，注意到 ubuntu:14.04 和 ubuntu:trusty 具有相同的映像檔 ID，說明它們實際上是同一映像檔。
     * TAG 用來標記來自同一個倉庫的不同映像檔。例如 ubuntu 倉庫中有多個映像檔，通過 TAG 來區分發行版本，例如 10.04、12.04、12.10、13.04、14.04 等。
-1. 查看所有本機的容器
+1. 查看所有本機 __正在運行__ 的容器
     ```
     $ sudo docker ps
+    CONTAINER ID    IMAGE   COMMAND  CREATED   STATUS    PORTS   NAMES
     ```
+1. 查看過去 __曾經運行__ 的容器
+    ```
+    $ sudo docker ps -a
+    CONTAINER ID    IMAGE   COMMAND  CREATED   STATUS    PORTS   NAMES
+    305297d7a235    busybox       "uptime"  11 minutes ago   Exited (0) 11 minutes ago  distracted_goldstine
+    ff0a5c3750b9    busybox       "sh"      12 minutes ago   Exited (0) 12 minutes ago  elated_ramanujan
+    14e5bd11d164    hello-world   "/hello"  2 minutes ago    Exited (0) 2 minutes ago   thirsty_euclid
+    ```
+
 ## 6. 運行docker
 
 1. 用docker run來運行docker，若image不存在會自動從遠端獲取。獲取image之後會自動建立一個容器來運行。
@@ -89,12 +98,136 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
     This message shows that your installation appears to be working correctly.
     ...
     ```
-1. 有些服務運行起來會需要進行互動，可以下參數`-i -t`，如下例：
+1. 有些服務運行起來會需要進行互動，可以下參數`-i -t`或`-it`，如下例：
     ```
     $ sudo docker run -i -t ubuntu:12.04 /bin/bash
     root@fe7fc4bd8fc9:/#
     ```
+1. 服務若需要背景執行(守護態執行)，可以下參數`-d`(detached mode的意思)。下例啟動ubuntu後，每秒印一次hello world，讓執行緒背景執行：
+    ```
+    $ sudo docker run -d ubuntu:14.04 /bin/sh -c "while true; do echo hello world; sleep 1; done"
+    ```
+1. 啟動容器可以自行命名，參數`--name [name]`可以自定義容器名稱，若未自定義則名稱會自動產生，透過`sudo docker ps`指令返回的NAMES欄位可以看到容器名稱。
+1. 參數`-P`代表自動給予port號。
 1. 使用docker run若沒有指定tag，預設使用latest。
+1. 靜態網頁啟動範例: 
+    * 以detached mode啟動服務，且讓系統自動給予port號：
+    ```
+    $ sudo docker run -d -P --name static-site prakhar1989/static-site
+    ```
+    * 查詢port號。
+    ```
+    $ docker port static-site
+    80/tcp -> 0.0.0.0:32769
+    443/tcp -> 0.0.0.0:32768
+    ```
+    * 也可以用`-p`(小p)在啟動的時候自動指定port號。下例表示將本機8888 port的所有流量導到該容器的80 port：
+    ```
+    $ sudo docker run -d -p 8888:80 --name static-site prakhar1989/static-site
+    ```
+    * 透過下列指令停止服務：
+    ```
+    $ sudo docker stop static-site
+    ```
 
-## 7. 
+## 7. 刪除container
 
+1. 使用下列語法可以刪除指定container ID的容器(可一次刪除多個容器)
+    ```
+    $ sudo docker rm 305297d7a235 ff0a5c3750b9
+    305297d7a235
+    ff0a5c3750b9
+    ```
+1. 可以使用下列語法一次刪除所有狀態為exited的容器
+    ```
+    $ sudo docker rm $(sudo docker ps -a -q -f status=exited)
+    c7fe5b28ff1e
+    5d4f4bfd9002
+    cb20fc437681
+    78ec7b27d8a8
+    f0a093d8e9f2
+    f25f54655076
+    ...
+    ```
+    * `-q`表示只回傳container ID，`-f`是設定過濾，`-f status=exited`是過濾出所有狀態為exited的容器。
+
+## 8. Dockerfile
+
+1. 以prakhar1989/docker-curriculum來示範如何使用Dockerfile，首先從git下載程式碼。
+    ```
+    $ git clone https://github.com/prakhar1989/docker-curriculum
+    $ cd docker-curriculum/flask-app
+    ```
+1. 看一下Dockerfile如下：
+    ```
+    # Instructions copied from - https://hub.docker.com/_/python/
+    FROM python:3-onbuild
+
+    # tell the port number the container should expose
+    EXPOSE 5000
+
+    # run the command
+    CMD ["python", "./app.py"]
+    ```
+    * 用`#`來做註解，第一行固定要用FROM來引入所需要的環境，這個專案使用Python 3，使用python:3-onbuild來自動建立所需要對應的環境。
+    * `EXPOSE 5000`代表容器對外的port。
+    * `CMD ["python", "./app.py"]`這即是啟動服務的指令，對應到`python ./app.py`。
+    * `CMD`是容器啟動後執行的程序，`RUN`開頭的指令則是會在建立容器時執行。
+    * Dockfile 中的指令被一條一條的執行。每一步都建立了一個新的容器，在容器中執行指令並提交修改。當所有的指令都執行完畢之後，返回了最終的映像檔 id。所有的中間步驟所產生的容器都會被刪除和清理。
+1. 下列建立指令可以根據當前目錄的Dockerfile來建立image，注意`-t [username]/[name]`指令中username要用自己在Docker hub上註冊的ID，且最後一個`.`意思為當前目錄，不可省略，也可以換成Dockerfile的絕對或相對路徑：
+    ```
+    $ docker build -t nowaxsky/test .
+    ```
+1. 接著啟動服務：
+    ```
+    $ sudo docker run -p 9001:5000 nowaxsky/test
+    ```
+1. 使用瀏覽器拜訪localhost:9001。
+
+    <img src="./resource/docker-curriculum.JPG" alt="docker-curriculum" width="80%"/>
+
+1. 若要查看log，使用`docker logs [container name/container ID]`(基本上docker指令中，有關係到container ID的都可以和container name互換，兩者是一對一且唯一)：
+    ```
+    $ sudo docker logs 22518564ac4f
+    ```
+1. __Docker push__ : 將image推送到自己的Docker hub上：
+    ```
+    $ sudo docker push nowaxsky/test
+    ```
+    * 如果沒有從本機登入過Docker hub的話，需要先登入：
+    ```
+    $ docker login
+    Username: nowaxsky
+    WARNING: login credentials saved in /Users/prakhar/.docker/config.json
+    Login Succeeded
+    ```
+## 9. 多容器環境 - FoodTrucks
+    
+<img src="./resource/foodtrucks.png" alt="foodtrucks" width="80%"/>
+
+1. 下面將以FoodTrucks專案為例，說明請參考[Github](https://github.com/nowaxsky/FoodTrucks "FoodTrucks")。請用下列指令下載程式碼：
+    ```
+    $ git clone https://github.com/prakhar1989/FoodTrucks
+    $ cd FoodTrucks
+    $ tree -L 2
+    .
+    ├── Dockerfile
+    ├── README.md
+    ├── aws-compose.yml
+    ├── docker-compose.yml
+    ├── flask-app
+    │   ├── app.py
+    │   ├── package-lock.json
+    │   ├── package.json
+    │   ├── requirements.txt
+    │   ├── static
+    │   ├── templates
+    │   └── webpack.config.js
+    ├── setup-aws-ecs.sh
+    ├── setup-docker.sh
+    ├── shot.png
+    └── utils
+        ├── generate_geojson.py
+        └── trucks.geojson
+    ```
+1. 
