@@ -1,11 +1,11 @@
-# docker
+# Docker
 
 ## 1. 什麼是容器
 
 VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用程式所需的執行環境打包起來，建立一個孤立環境，方便在不同的硬體中移動，但兩者的運作思維截然不同。簡單來說，常見的傳統虛擬化技術如vSphere或Hyper-V是以作業系統為中心，而Container技術則是一種以應用程式為中心的虛擬化技術。docker就是一種容器的實作。
 
-<img src="./resource/virtualization.png" alt="virtualization" width="80%"/>
-<img src="./resource/docker.png" alt="docker" width="80%"/>
+<img src="../resource/virtualization.png" alt="virtualization" width="80%"/>
+<img src="../resource/docker.png" alt="docker" width="80%"/>
 
 兩者最明顯的差別是，虛擬機器需要安裝作業系統(安裝Guest OS)才能執行應用程式，而Container內不需要安裝作業系統就能執行應用程式。Container技術不是在OS外來建立虛擬環境，而是在OS內的核心系統層來打造虛擬執行環境，透過共用Host OS的作法，取代一個一個Guest OS的功用。Container也因此被稱為是OS層的虛擬化技術。
 
@@ -184,11 +184,11 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
     ```
 1. 使用瀏覽器拜訪localhost:9001。
 
-    <img src="./resource/docker-curriculum.JPG" alt="docker-curriculum" width="80%"/>
+    <img src="../resource/docker-curriculum.JPG" alt="docker-curriculum" width="80%"/>
 
-1. 若要查看log，使用`docker logs [container name/container ID]`(基本上docker指令中，有關係到container ID的都可以和container name互換，兩者是一對一且唯一)：
+1. 若要查看log，使用`docker container logs [container name/container ID]`(基本上docker指令中，有關係到container ID的都可以和container name互換，兩者是一對一且唯一)：
     ```
-    $ sudo docker logs 22518564ac4f
+    $ sudo docker container logs 22518564ac4f
     ```
 1. __Docker push__ : 將image推送到自己的Docker hub上：
     ```
@@ -201,45 +201,3 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
     WARNING: login credentials saved in /Users/prakhar/.docker/config.json
     Login Succeeded
     ```
-## 9. 多容器環境 - FoodTrucks
-    
-<img src="./resource/foodtrucks.png" alt="foodtrucks" width="80%"/>
-
-1. 下面將以FoodTrucks專案為例，後台由Python (Flask)做成，搜尋是使用[Elasticsearch](https://www.elastic.co/products/elasticsearch)(ES)，服務分為兩個部分，說明請參考[Github](https://github.com/nowaxsky/FoodTrucks "FoodTrucks")。請用下列指令下載程式碼：
-    ```
-    $ git clone https://github.com/prakhar1989/FoodTrucks
-    $ cd FoodTrucks
-    $ tree -L 2
-    .
-    ├── Dockerfile
-    ├── README.md
-    ├── aws-compose.yml
-    ├── docker-compose.yml
-    ├── flask-app
-    │   ├── app.py
-    │   ├── package-lock.json
-    │   ├── package.json
-    │   ├── requirements.txt
-    │   ├── static
-    │   ├── templates
-    │   └── webpack.config.js
-    ├── setup-aws-ecs.sh
-    ├── setup-docker.sh
-    ├── shot.png
-    └── utils
-        ├── generate_geojson.py
-        └── trucks.geojson
-    ```
-1. 服務拆為兩個部分，所以啟動兩個容器，但從Github上面只能下載到backend的部分，可以透過下列指令搜尋遠端是否有Elasticsearch的專案：
-    ```
-    $ sudo docker search elasticsearch
-    ```
-    * 可以發現有官方專案，不過這邊建議還是使用Elastic公司自行維護的[網站](https://www.docker.elastic.co/)來下載：
-    ```
-    $ sudo docker pull docker.elastic.co/elasticsearch/elasticsearch:6.3.2
-    ``` 
-    * 下載完成後用下列語法來啟動：
-    ```
-    docker run -d --name es -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.3.2
-    ```
-
