@@ -7,7 +7,7 @@
 * 下面將以FoodTrucks專案為例，後台由Python (Flask)做成，搜尋是使用[Elasticsearch](https://www.elastic.co/products/elasticsearch)(ES)，服務分為兩個部分，說明請參考[Github](https://github.com/nowaxsky/FoodTrucks "FoodTrucks")。請用下列指令下載程式碼：
 
 ```
-$ git clone https://github.com/prakhar1989/FoodTrucks
+$ git clone https://github.com/nowaxsky/FoodTrucks
 $ cd FoodTrucks
 $ tree -L 2
 .
@@ -304,7 +304,7 @@ $ sudo docker run -d --net foodtrucks-net -p 5000:5000 --name foodtrucks-web now
 
 $ sudo docker container ls
 CONTAINER ID        IMAGE                                                 COMMAND                  CREATED              STATUS              PORTS                                            NAMES
-852fc74de295        prakhar1989/foodtrucks-web                            "python ./app.py"        About a minute ago   Up About a minute   0.0.0.0:5000->5000/tcp                           foodtrucks-web
+852fc74de295        nowaxsky/foodtrucks-web                            "python ./app.py"        About a minute ago   Up About a minute   0.0.0.0:5000->5000/tcp                           foodtrucks-web
 13d6415f73c8        docker.elastic.co/elasticsearch/elasticsearch:6.3.2   "/usr/local/bin/dock…"   17 minutes ago       Up 17 minutes       0.0.0.0:9200->9200/tcp, 0.0.0.0:9300->9300/tcp   es
 
 $ curl -I 0.0.0.0:5000
@@ -319,7 +319,7 @@ Date: Thu, 28 Feb 2019 17:59:45 GMT
 #!/bin/bash
 
 # build the flask container
-docker build -t prakhar1989/foodtrucks-web .
+docker build -t nowaxsky/foodtrucks-web .
 
 # create the network
 docker network create foodtrucks-net
@@ -328,7 +328,7 @@ docker network create foodtrucks-net
 docker run -d --name es --net foodtrucks-net -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.3.2
 
 # start the flask app container
-docker run -d --net foodtrucks-net -p 5000:5000 --name foodtrucks-web prakhar1989/foodtrucks-web
+docker run -d --net foodtrucks-net -p 5000:5000 --name foodtrucks-web nowaxsky/foodtrucks-web
 ```
 * 使用指令呼叫bash script：
 ```
