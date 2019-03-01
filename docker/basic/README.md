@@ -130,7 +130,55 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
     $ sudo docker stop static-site
     ```
 
-## 7. 刪除container
+## 7. 進入容器
+
+* 主要有兩種方式進入容器：
+    1. `docker exec`
+    1. `docker attach`
+* `docker exec`是對正在運行中的容器輸入指令，先建立一個ubuntu容器：
+    ```
+    $ docker run --name ubuntu_bash --rm -i -t ubuntu bash
+    /# ls
+    bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+    /# cd tmp/
+    /tmp# ls
+    /tmp#
+    ```
+* 接下來啟動另外一個terminal2，輸入下列指令在剛才建立的容器中建立檔案：
+    ```
+    $ docker exec -d ubuntu_bash touch /tmp/execWorks
+    ```
+* 回到原來的terminal1再次輸入ls可以看到execWorks：
+    ```
+    /tmp# ls
+    execWorks
+    ```
+* 接下來terminal2輸入下列指令也可以進入互動模式：
+    ```
+    sudo docker exec -it ubuntu_bash bash
+    /# 
+    ```
+* 注意此時是開了第二個新的session，並沒有產生第二個容器，所以可以透過第三個terminal3用`sudo docker ps`確認仍然只有一個容器。由於是新開的session，所以使用exit也不會影響到terminal1的狀態而關閉容器。
+* 在terminal2使用下列指令離開後，再次進入容器：
+    ```
+    /# exit
+    $ sudo docker exec -it -e VAR=1 ubuntu_bash bash
+    ```
+* 注意上述做法產生一個環境變數`VAR=1`的session連接到容器，這個作用範圍僅限於terminal2，對於terminal1是不受影響的。
+* `docker attach`是attach到現在正在運行中的容器，下面先背景運行容器：
+    ```
+    $ sudo docker run -d --name topdemo ubuntu /usr/bin/top -b
+    ```
+* 接下來透過`attach`指令進入容器：
+    ```
+    $ sudo docker attach topdemo
+    ```
+* 可以看到記錄不斷被寫入，透過`CTRL+C`離開，注意此時整個容器也被停止了。
+* `docker exec`和`docker attach`都可以進入容器，但`docker exec`是使用一條新的session，`docker attach`則是控制同一條session，所以如果多個視窗attach到該容器，則會全部同步，最明顯的差異就是假設有兩個視窗同時進入容器，若是使用`docker exec`則離開其中一個並不會導致另外一個視窗離開，但`docker attach`則會兩者都離開。
+
+<img src="../resource/docker-attach.JPG" alt="docker-attach" width="80%"/>
+
+## 8. 刪除container
 
 1. 使用下列語法可以刪除指定container ID的容器(可一次刪除多個容器)
     ```
@@ -151,7 +199,7 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
     ```
     * `-q`表示只回傳container ID，`-f`是設定過濾，`-f status=exited`是過濾出所有狀態為exited的容器。
 
-## 8. Dockerfile
+## 9. Dockerfile
 
 1. 以prakhar1989/docker-curriculum來示範如何使用Dockerfile，首先從git下載程式碼。
     ```
@@ -196,7 +244,7 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
     ```
     * 如果沒有從本機登入過Docker hub的話，需要先登入：
     ```
-    $ docker login
+    $ sudo docker login
     Username: nowaxsky
     WARNING: login credentials saved in /Users/prakhar/.docker/config.json
     Login Succeeded
