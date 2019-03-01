@@ -2,6 +2,9 @@
 
 This is a study for docker.
 
+***Build, Ship and Run any App, Anywhere*** <br>
+***Build once, Run anywhere.***
+
 ## Reference:
 https://docker-curriculum.com/#introduction<br>
 https://philipzheng.gitbooks.io/docker_practice/content/<br>
