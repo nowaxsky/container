@@ -201,3 +201,4 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
     WARNING: login credentials saved in /Users/prakhar/.docker/config.json
     Login Succeeded
     ```
+1. 如果需要建立image也可以透過`docker commit`的方式建立，docker commit適用於對於既有容器的擴展，但如果團隊中使用或是有大量的指令需要於建立中執行，還是建議使用Dockerfile，更多內容請參考[官方網站](https://docs.docker.com/engine/reference/commandline/commit/)。
