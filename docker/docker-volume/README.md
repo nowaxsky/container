@@ -1,5 +1,7 @@
 # Docker Volume
 
+<img src="../resource/types-of-mounts-volume.png" alt="types-of-mounts-volume" width="80%"/>
+
 有兩種方式可以管理容器中的資料：
 * Data volumes
 * Data volume containers
@@ -148,3 +150,16 @@
     ```
 * 從上面的測試中可以確定container2的容器和container1是使用同一個。
 
+## 4. Mount
+
+* 基本上所有`-v`都可以替換為`--mount`來使用，在新版的docker中官方建議使用`--mount`，因為操作上可以更詳細且語意更清楚。(In general, `--mount` is more explicit and verbose. The biggest difference is that the `-v` syntax combines all the options together in one field, while the `--mount` syntax separates them. When using volumes with services, only `--mount` is supported.)
+* 下列兩個用法等效：
+    ```
+    $ docker run -d --name devtest --mount source=myvol2,target=/app nginx:latest
+    $ docker run -d --name devtest -v myvol2:/app nginx:latest
+    ```
+* 下列兩個用法等效：
+    ```
+    $ docker run -d --name=nginxtest --mount source=nginx-vol,destination=/usr/share/nginx/html,readonly nginx:latest
+    $ docker run -d --name=nginxtest -v nginx-vol:/usr/share/nginx/html:ro nginx:latest
+    ```
