@@ -63,7 +63,7 @@ Docker Swarm就是要解決容器管理的問題。
 
 1. 請點選右邊動作(Actions)列中的虛擬交換器管理員(Virtual Switch Manager)，並點選新虛擬網路交換器(new virtual network switch)，選擇 __外部(external)__ ，之後點選建立虛擬交換器。
 
-    <img src="../resource/new-external-network-switch.png" alt="new-external-network-switch" width="80%"/>
+    <img src="../resource/new-external-network-switch.PNG" alt="new-external-network-switch" width="80%"/>
 
 1. 將虛擬交換器命名為Primary Virtual Switch，並在連線類型(Connection type)的外部網路(External network)中，使用下拉式選單選擇網路，並允許管理作業系統共用此網路介面卡(Allow management operating system to share this network adapter)，套用後按下確定。
 
