@@ -5,7 +5,7 @@
 
 ## 2. Install Minikube with Chocolatey on Windows
 
-1. 這篇文章以Windows環境為主，若為Mac可以參考官網。首先以系統管理員啟動PowerShell (x86)並輸入下列指令安裝`Chocolatey`：
+1. 這篇文章以Windows環境為主，若為Mac可以參考官網。首先以系統管理員啟動PowerShell並輸入下列指令安裝`Chocolatey`：
     ```
     $ Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
     ```
@@ -39,7 +39,7 @@
 1. 下載[kubectl.exe](https://storage.googleapis.com/kubernetes-release/release/v1.9.0/bin/windows/amd64/kubectl.exe)並放到`C:Windows\system32`中。
     <img src="../resource/kubectl.png" alt="kubectl" width="80%"/>
 1. 請到[minikube](https://github.com/kubernetes/minikube/releases)發行下載最新的minikube，這裡使用的版本是`Minikube v0.33.1`。並將下載下來的exe檔案重新命名為`minikube.exe`並放到`C:Windows\system32`中。
-    <img src="../resource/minikube-in-system32.PNG" alt="minikube-in-system32" width="80%"/>
+    <img src="../resource/minikube-in-system32.png" alt="minikube-in-system32" width="80%"/>
 1. 輸入下列指令可以看到版本：
     ```
     $ minikube version
