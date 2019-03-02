@@ -20,23 +20,23 @@ Docker Swarm就是要解決容器管理的問題。
 
 * 請先到官網[下載](https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe)Docker，桌面版將包含Docker Engine、Docker CLI client、Docker Compose、Docker Machine、和Kitematic。接下來直接進行安裝。
 
-<img src="../resource/docker-desktop-install-successfully.JPG" alt="docker-desktop-install-successfully" width="80%"/>
+    <img src="../resource/docker-desktop-install-successfully.JPG" alt="docker-desktop-install-successfully" width="80%"/>
 
 * 安裝完成後會需要登出，重新登入後會跳出下列訊息要求重開機，請點選OK。
 
-<img src="../resource/docker-desktop-alert.JPG" alt="docker-desktop-alert" width="80%"/>
+    <img src="../resource/docker-desktop-alert.JPG" alt="docker-desktop-alert" width="80%"/>
 
 * 重新啟動後已經完成安裝設定，可以從開始搜尋到Docker for Windows，或是螢幕右
 下角也會顯示Docker。
 
-<img src="../resource/docker-app-search.png" alt="docker-app-search" />
-<br>
-<br>
-<img src="../resource/whale-icon-systray.png" alt="whale-icon-systray" />
+    <img src="../resource/docker-app-search.png" alt="docker-app-search" />
+    <br>
+    <br>
+    <img src="../resource/whale-icon-systray.png" alt="whale-icon-systray" />
 
 * 安裝完成後會自動跳出登入畫面，請輸入您在Docker hub上面的帳號。
 
-<img src="../resource/docker-app-welcome.png" alt="docker-app-welcome" />
+    <img src="../resource/docker-app-welcome.png" alt="docker-app-welcome" />
 
 * 接下來請打開cmd並輸入下列語法檢查版本以確認安裝成功。
     ```
@@ -74,7 +74,7 @@ Docker Swarm就是要解決容器管理的問題。
     ```
     $ docker-machine create --driver hyperv default
     ```
-<img src="../resource/create-machine-successfully.PNG" alt="create-machine-successfully" width="80%"/>
+    <img src="../resource/create-machine-successfully.PNG" alt="create-machine-successfully" width="80%"/>
 
 * 下列語法可以查看所有的machine，確定啟動成功：
     ```
@@ -112,7 +112,7 @@ Docker Swarm就是要解決容器管理的問題。
     $ docker-machine ssh manager1
     ```
 
-<img src="../resource/docker-machine-ssh-manager1.png" alt="docker-machine-ssh-manager1" width="80%"/>
+    <img src="../resource/docker-machine-ssh-manager1.PNG" alt="docker-machine-ssh-manager1" width="80%"/>
 
 ## 4. 加入 Swarm
 
@@ -192,10 +192,10 @@ Docker Swarm就是要解決容器管理的問題。
     ```
 * 可以在cmd中下curl來拜訪服務，或是直接在瀏覽器上輸入服務位置，可以透過指令`docker-machine ls`查詢IP位置。
 
-    <img src="../resource/nginx-manager1.png" alt="nginx-manager1" width="80%"/>
+    <img src="../resource/nginx-manager1.PNG" alt="nginx-manager1" width="80%"/>
     <br>
     <br>
-    <img src="../resource/nginx-worker2.png" alt="nginx-worker2" width="80%"/>
+    <img src="../resource/nginx-worker2.PNG" alt="nginx-worker2" width="80%"/>
 
 * 注意，`192.168.100.119`是worker2的IP，雖然沒有服務啟動，但Swarm已經自動幫我們做了Load Balance。
 
