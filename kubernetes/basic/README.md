@@ -68,6 +68,7 @@
 
     To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
     ```
+    <img src="../resource/minikube-start-successfully.png" alt="minikube-start-successfully" width="80%"/>
 1. 打開minikube dashboard：
     ```
     $ minikube dashboard
