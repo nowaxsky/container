@@ -29,14 +29,14 @@ Docker Swarm就是要解決容器管理的問題。
 * 重新啟動後已經完成安裝設定，可以從開始搜尋到Docker for Windows，或是螢幕右
 下角也會顯示Docker。
 
-<img src="../resource/docker-app-search.png" alt="docker-app-search" width="80%"/>
+<img src="../resource/docker-app-search.png" alt="docker-app-search" />
 <br>
 <br>
-<img src="../resource/whale-icon-systray.png" alt="whale-icon-systray" width="80%"/>
+<img src="../resource/whale-icon-systray.png" alt="whale-icon-systray" />
 
 * 安裝完成後會自動跳出登入畫面，請輸入您在Docker hub上面的帳號。
 
-<img src="../resource/docker-app-welcome.png" alt="docker-app-welcome" width="80%"/>
+<img src="../resource/docker-app-welcome.png" alt="docker-app-welcome" />
 
 * 接下來請打開cmd並輸入下列語法檢查版本以確認安裝成功。
     ```
@@ -74,7 +74,7 @@ Docker Swarm就是要解決容器管理的問題。
     ```
     $ docker-machine create --driver hyperv default
     ```
-<img src="../resource/create-machine-successfully.png" alt="create-machine-successfully" width="80%"/>
+<img src="../resource/create-machine-successfully.PNG" alt="create-machine-successfully" width="80%"/>
 
 * 下列語法可以查看所有的machine，確定啟動成功：
     ```
