@@ -1,7 +1,10 @@
-# Kubernetes
+# Minikube
 
-## 1. Kubernetes(k8s)觀念
+<img src="../resource/minikube-logo.jpg" alt="minikube-logo" />
 
+## 1. Minikube
+
+Minikube 是一個輕量化的Kubernetes實作，它在你的本地建立一個VM並且部署 __只有一個__ Node的簡易叢集。Minikube 可以在 Linux、macOS、以及 Windows 系統上使用。
 
 ## 2. Install Minikube with Chocolatey on Windows
 
