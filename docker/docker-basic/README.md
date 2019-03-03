@@ -178,7 +178,7 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
 
 <img src="../resource/docker-attach.JPG" alt="docker-attach" width="80%"/>
 
-## 8. 刪除container
+## 8. 刪除 container
 
 1. 使用下列語法可以刪除指定container ID的容器(可一次刪除多個容器)
     ```
@@ -198,6 +198,29 @@ VM和容器雖然都屬於虛擬化的技術，目標都是為了將一套應用
     ...
     ```
     * `-q`表示只回傳container ID，`-f`是設定過濾，`-f status=exited`是過濾出所有狀態為exited的容器。
+1. 若該容器正在運行中則無法刪除，需要先停止服務，語法如下：
+    ```
+    $ sudo docker stop 68de841ba2c4
+    68de841ba2c4
+    ```
+
+## 8. 刪除 image
+
+* 刪除 image 語法 `docker rmi [image ID]`。
+    ```
+    $ sudo docker rmi ce52e70ad179
+    ```
+* 若該 image 仍有容器未移除則無法刪除(需要移除所有容器，若僅停止容器仍無法移除 image)。所以若要刪除 image 需要三個步驟：
+    1. 停止該 image 所產生的所有容器。
+    1. 刪除該 image 所產生的所有容器。
+    1. 刪除該 image。
+* 範例：下面示範如何刪除所有 image。(若要刪除指定的 image，則在每個步驟中下參數 `-f` 進行過濾)
+    ```
+    $ sudo docker stop $(sudo docker ps -q)
+    $ sudo docker rm $(sudo docker ps -aq)
+    $ sudo docker rmi $(sudo docker images -q)
+    ```
+
 
 ## 9. Dockerfile
 
