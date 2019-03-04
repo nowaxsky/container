@@ -1,6 +1,6 @@
 # Minikube
 
-<img src="../resource/minikube-logo.jpg" alt="minikube-logo" />
+<img src="../resource/minikube-logo.jpg" alt="minikube-logo" width="50%"/>
 
 ## 1. Minikube
 
