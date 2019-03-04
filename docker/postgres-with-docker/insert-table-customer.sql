@@ -1,0 +1,2 @@
+INSERT INTO CUSTOMER (NAME, EMAIL, BIRTHDAY, POINT) VALUES ('Chuck Mai', 'chuck.mai@gmail.com', to_date('07 08 1987', 'DD MM YYYY'), 540);
+INSERT INTO CUSTOMER (NAME, EMAIL, BIRTHDAY, POINT) VALUES ('Eason Hung', 'eason.hung@gmail.com', to_date('08 07 1978', 'DD MM YYYY'), 8750);
