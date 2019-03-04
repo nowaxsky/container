@@ -163,3 +163,39 @@
     $ docker run -d --name=nginxtest --mount source=nginx-vol,destination=/usr/share/nginx/html,readonly nginx:latest
     $ docker run -d --name=nginxtest -v nginx-vol:/usr/share/nginx/html:ro nginx:latest
     ```
+
+## 5. Volumes on Windows
+
+* 如果是在 Windows 使用 Docker，需要特別設定。若您是使用 Docker Desktop，請參考這篇[文章](https://rominirani.com/docker-on-windows-mounting-host-directories-d96f3f056a2c)。以下的說明是針對使用舊版的 Docker Toolbox。
+* 啟動中的 Docker 實際上會呼叫到一台 VirtualBox 的虛擬機，筆者是 default。
+
+    <img src="../resource/docker-with-vm.png" alt="docker-with-vm" width="80%"/>
+* 下指令先停止 docker-machine。
+    ```
+    $ docker-machine stop
+    ```
+    <img src="../resource/docker-with-vm-stop.png" alt="docker-with-vm-stop" width="80%"/>
+* 在 VirtualBox 的虛擬機中增加共用資料夾 (shared folder)。
+
+    <img src="../resource/shared-folder-in-default.png" alt="shared-folder-in-default" width="80%"/>
+    <br>
+    <br>
+    <img src="../resource/add-shared-folder.png" alt="add-shared-folder" width="80%"/>
+* 重新啟動 docker-machine。
+    ```
+    $ docker-machine start
+    ```
+* ssh連線進入 docker-machine，並在當前目錄增加一個資料夾 `projects`。
+    ```
+    $ docker-machine ssh default
+    docker@default:~$ mkdir projects
+    ```
+    <img src="../resource/ssh-default.png" alt="ssh-default"/>
+*  掛載剛才設定好的共用資料夾即完成。
+    ```
+    docker@default:~$ sudo mount -t vboxsf -o uid=1000,gid=50 data /home/docker/projects
+    ```
+* 在 Windows本機的 `D:\data\` 中新增檔案 `file.txt` 確定掛載成功。
+
+    <img src="../resource/file-in-volume.png" alt="file-in-volume" width="80%"/>
+* 參考文章在[這裡](http://support.divio.com/local-development/docker/how-to-use-a-directory-outside-cusers-with-docker-toolboxdocker-for-windows)。
