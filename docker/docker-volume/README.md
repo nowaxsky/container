@@ -68,6 +68,12 @@
     $ sudo docker volume rm 29fb846e9275258554d9ad0c06375ca24ad235726d398e8eb8a2dfe7fd52db86
     29fb846e9275258554d9ad0c06375ca24ad235726d398e8eb8a2dfe7fd52db86
     ```
+* 也可以透過下列指令直接刪除所有未使用的 volume：
+    ```
+    $ docker volume prune
+    WARNING! This will remove all local volumes not used by at least one container.
+    Are you sure you want to continue? [y/N] y
+    ```
 
 ## 2. 掛載本機端目錄到容器
 
