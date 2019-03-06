@@ -125,6 +125,77 @@
 ## 4. 資料初始化
 
 * 如果要將變動過後的資料備份後再移動，在 Windows 或 Linux 環境下可能無法成功，因為沒有拜訪許可的權限，導致無法成功產生備份檔案。若為 Linux 環境可以參考相關文章：[Backup/Restore a dockerized PostgreSQL database](https://stackoverflow.com/questions/24718706/backup-restore-a-dockerized-postgresql-database)，[How to backup a PostgreSQL database using Docker](https://devopsheaven.com/postgresql/pg_dump/databases/docker/backup/2017/09/10/backup-postgresql-database-using-docker.html)。
-* 若是在 Windows 或 Linux 環境下可以考慮一開始產生映像檔時就建立好 table 和 data，如此也能將建立的環境帶到其他地方，不倚賴更改後的備份或是 Volume，本節將示範如何將資料初始化在映像檔中。
+* 若是在 Windows 或 Mac 環境下可以考慮一開始產生映像檔時就建立好 table 和 data，如此也能將建立的環境帶到其他地方，不倚賴更改後的備份或是 Volume，本節將示範如何將資料初始化在映像檔中。
 
-    
+
+測試: https://github.com/oomusou/PostgresDocker
+
+先建立~/postgres 把資料丟在裡面, .env要改
+HOST_DIR=~/postgres-sql (掛載的地方, 不能跟docker-compose這些東西放一起)
+POSTGRES_PORT=1234
+POSTGRES_DB=mydb
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=12345
+
+version: "3"
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: MyPostgres
+    volumes:
+      - ${HOST_DIR}:/var/lib/postgresql/data
+    expose:
+      - 5432
+    ports:
+      - ${POSTGRES_PORT}:5432
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+下指令docker-compose up -d啟動
+先查網路 sudo docker network ls
+連線指令:(注意因為有預設一個db叫做mydb, 如果沒有給-d mydb會預設連線到admin, 因為不存在會報錯)
+sudo docker run -it --rm --net postgres_default --link MyPostgres:postgres postgres psql -h postgres -U admin -d mydb
+
+測試2: https://github.com/noveogroup-amorgunov/docker-compose-postgres
+
+* 使用 `docker-compose.yml` 來初始化資料庫。
+    ```
+    version: "3"
+
+    services:
+        postgres:
+            image: postgres:latest
+            restart: always
+            container_name: mypostgres
+            volumes:
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+            expose:
+            - 5000:5432
+    ```
+    * `volumes` 是將本機的檔案放到容器內，且如果放到 `docker-entrypoint-initdb.d/` 目錄下則會在初始化的時候執行，注意僅接受 `*.sql`、`*.sql.gz`，和 `*.sh` 檔案類型，若有多個檔案，則會根據 ASCII 順序執行。另外請注意 `docker-entrypoint-initdb.d/` 下檔案呼叫的時間點是在建立預設使用者 postgres 和預設資料庫 postgres 之後。也就是如果您在 `init.sql` 沒有特別設定而直接建立表格，將會建立在資料庫 postgres 之中。
+    * `expose` 可以設定對外的port號，`5000` 可以自由更改。
+* `init.sql`，裡面可以設定各種初始化資訊。範例中建立了資料庫 mydb，並在建立使用者 admin 後，建立一個表格 CUSTOMER。根據上一段的說明，`init.sql` 是在建立完預設使用者和資料庫後執行，所以這些指令將會是在使用者 postgres 在資料庫 postgres 下執行，會有兩個事實：
+    1. CUSTOMER 是建立在資料庫 postgres 中而非 mydb。
+    1. admin 並沒有對於資料庫 postgres 的權限導致無法拜訪 CUSTOMER。
+    ```
+    CREATE DATABASE mydb;
+    CREATE USER admin WITH PASSWORD '0000';
+    GRANT ALL PRIVILEGES ON DATABASE "mydb" to admin;
+
+    DROP TABLE IF EXISTS CUSTOMER;
+    CREATE TABLE CUSTOMER
+    (
+        /* customer ID */
+        ID bigserial UNIQUE NOT NULL,
+        /* customer name */
+        NAME varchar(255) NOT NULL,
+        PRIMARY KEY (ID)
+    );
+    ```
+* 以下是驗證這兩個事實，接著會調整作法。首先背景啟動 docker-compose。
+    ```
+    $ docker-compose up -d
+    ```
